@@ -35,19 +35,24 @@ public class AugmentedWebViewNode extends AnchorNode {
     private static final String TAG = "AugmentedImageNode";
     private Node webViewNode;
     private static CompletableFuture<ViewRenderable> webViewRenderable;
+    // Added on 11 May 2020 for Container Crush {
+    public String selection = "2";
+    public String videoPath = null;
+    // Added on 11 May 2020 for Container Crush }
 
     public AugmentedWebViewNode (Context context) {
         if (webViewRenderable == null)
             webViewRenderable = ViewRenderable.builder().setView(context, R.layout.web_view).build();
     }
-    public void setImage(AugmentedImage image) {
+    public void setImage(AugmentedImage image, String n) {
         ViewRenderable modelRenderable;
+        selection = n;
   //      String vhtml="<!DOCTYPE html><html><body><iframe width=\"300\" height=\"315\"src=\"https://sabyas3firstbucket.s3.amazonaws.com/VID-20190304-WA0007.mp4\"></iframe></body></html>";
      //   MediaController MediaC;
         setAnchor(image.createAnchor(image.getCenterPose()));
         if (!webViewRenderable.isDone()) {
             CompletableFuture.allOf(webViewRenderable)
-                    .thenAccept((Void aVoid) -> setImage(image))
+                    .thenAccept((Void aVoid) -> setImage(image, n))
                     .exceptionally(
                             throwable -> {
                                 Log.e(TAG, "Exception Loading", throwable);
@@ -67,7 +72,8 @@ public class AugmentedWebViewNode extends AnchorNode {
             modelRenderable.setSizer(new ViewSizer() {
                 @Override
                 public Vector3 getSize(View view) {
-                    return new Vector3(0.25f, 0.35f, 0.0f);
+                   // return new Vector3(0.25f, 0.35f, 0.0f);
+                    return new Vector3(0.5f, 0.7f, 0.0f);
                 }
             });
            //WebView webView = (WebView) modelRenderable.getView().findViewById(R.id.webView);
@@ -87,9 +93,38 @@ public class AugmentedWebViewNode extends AnchorNode {
          //   webView.loadUrl("file:///C:/Sabya_AR_Image_Recognition/videohtml.html");
           //  webView.loadData(vhtml, "text/html", "utf-8");
           //  webView.loadUrl("https://sabyas3firstbucket.s3.amazonaws.com/VID-20190304-WA0007.mp4");
-           String videoPath = "android.resource://com.example.sabyaarimagerecognition/"+R.raw.video;
+            webView.getLayoutParams().width=1200;
+            webView.getLayoutParams().height=1000;
+            // Added on 11 May 2020 for Container Crush {
+      // if (selection = "0") {
+            if (selection.equals("0")) {
+             videoPath = "android.resource://com.example.sabyaarimagerecognition/" + R.raw.video1;
+            }
+            else if (selection.equals("1")){
+                videoPath = "android.resource://com.example.sabyaarimagerecognition/" + R.raw.video2;
+            }
+            else if (selection.equals("2")){
+                videoPath = "android.resource://com.example.sabyaarimagerecognition/" + R.raw.video3;
+            }
+            else if (selection.equals("3")){
+                videoPath = "android.resource://com.example.sabyaarimagerecognition/" + R.raw.video4;
+            }
+            else if (selection.equals("4")){
+                videoPath = "android.resource://com.example.sabyaarimagerecognition/" + R.raw.video5;
+            }
+            else if (selection.equals("5")){
+                videoPath = "android.resource://com.example.sabyaarimagerecognition/" + R.raw.video6;
+            }
+            else {
+                videoPath = "android.resource://com.example.sabyaarimagerecognition/" + R.raw.video1;
+            }
+            // Added on 11 May 2020 for Container Crush }
+      //  }  // Commented on 11 May for COntainer Crush
+            // Commented on 11 May for COntainer Crush  String videoPath = "android.resource://com.example.sabyaarimagerecognition/" + R.raw.video;
            webView.setVideoPath(videoPath);
            webView.start();
+           return;
+           //MainActivity.flipVideo();
               }
         }
     }
